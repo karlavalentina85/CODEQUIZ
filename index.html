@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Java Script Quiz</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  </head>
+
+  <body>
+
+    <!-- Overall Bootstrap Grid -->
+      <div class="container">
+
+
+
+
+
+
+
+        <div id="openingText">
+          <h1>Quiz</h1>
+
+          <p>This is a Java Script challenge, let's test how far you are with the basics of the language.
+          You will have 3 minutes to complete the quiz. If your answer is wrong time will subtracted from your
+          game. Press the start button below to begin. Good luck!</p>
+
+          <button id="startBtn" type="button" class="btn btn-primary btn-lg">START</button>
+        </div>
+
+        <div id="quizText">
+        
+          <div id="question">
+            How can you get the total number of arguments passed to a function?
+          </div>  
+      
+          <br>
+         
+          <button id="option1" type="button" class="btn btn-outline-primary">Using args.length property</button>
+          <br>
+          <button id="option2" type="button" class="btn btn-outline-secondary">Using arguments.length property</button>
+          <br>
+          <button id="option3" type="button" class="btn btn-outline-success">None of the above.</button>
+        </div>
+
+        <div id="highScore">
+          High Score
+        </div>
+
+
+
+
+
+      </div>
+
+
+<script>
+  var quizText = document.getElementById("quizText");
+  quizText.style.display='none';
+
+  var highScore = document.getElementById("highScore");
+  highScore.style.display='none';
+
+
+  var startBtn = document.querySelector("#startBtn");
+
+  function startQuiz() {
+    var openingText = document.getElementById("openingText");
+    openingText.style.display='none';
+    quizText.style.display='';
+  }
+
+  // Add event listener to generate button
+  startBtn.addEventListener("click", startQuiz);
+
+  var option1 = document.querySelector("#option1");
+  option1.addEventListener("click", nextQuestion);
+
+  var option2 = document.querySelector("#option2");
+  option2.addEventListener("click", nextQuestion);
+
+  var option3 = document.querySelector("#option3");
+  option3.addEventListener("click", nextQuestion);
+
+  function nextQuestion() {
+    question.innerHTML = "Which of the following function of Array object reverses the order of the elements of an array?";
+    option1.innerHTML="reverse()";
+    option2.innerHTML="push()";
+    option3.innerHTML="reduce()";
+  }
+</script>
+
+
+
+
+
+        
+
+
+
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>  
+    </body>
+    </html>
+
+  
