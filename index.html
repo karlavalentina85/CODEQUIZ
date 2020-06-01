@@ -38,58 +38,146 @@
       
           <br>
          
-          <button id="option1" type="button" class="btn btn-outline-primary">Using args.length property</button>
+          <button id="option1" type="button" class="btn btn-outline-primary" value='a'>Using args.length property</button>
           <br>
-          <button id="option2" type="button" class="btn btn-outline-secondary">Using arguments.length property</button>
+          <button id="option2" type="button" class="btn btn-outline-secondary" value='b'>Using arguments.length property</button>
           <br>
-          <button id="option3" type="button" class="btn btn-outline-success">None of the above.</button>
+          <button id="option3" type="button" class="btn btn-outline-success" value='c'>None of the above.</button>
         </div>
 
         <div id="highScore">
-          High Score
+          <h1>High Score</h1>
+          <button id="startOverBtn" type="button" class="btn btn-primary btn-lg">START OVER</button>
+
         </div>
-
-
-
-
 
       </div>
 
 
 <script>
+  var quizQuestions= [
+    {
+      question:"Which of the following is an advantage of using JavaScript?",
+      answers: {
+        a:"Less server interaction",
+        b:"Immediate feedback to the visitors",
+        c:"All of the above"
+      },
+      correctAnswer: "c"
+    },
+    {
+      question:"Which built-in method returns the calling string value converted to lower case?",
+      answers: {
+        a:"toLowerCase()",
+        b:"toLower()",
+        c:"changeCase(case)"
+      },
+      correctAnswer: "a"     
+    },
+    {
+      question:"Which of the following methods removes the last element from an array and returns that element?",
+      answers: {
+        a:"last",
+        b:"get",
+        c:"pop"
+      },
+      correctAnswer: "c" 
+    },   
+    {
+      question:"Which of the following function of Array object reverses the order of the elements of an array?",
+      answers: {
+        a:"push",
+        b:"reverse",
+        c:"reduce"
+      },
+      correctAnswer: "b" 
+    },
+    { question:"Which of the following function of Number object returns a string value version of the current number?",
+      answers: {
+        a:"to.string()",
+        b:"to.fixed()",
+        c:"to.LocaleString()"
+      },
+      correctAnswer: "a" 
+    }      
+  ];
+
+  var questionNumber=0;
+  var numberOfQuestions= quizQuestions.length;
+
+  var openingText = document.getElementById("openingText");
+  openingText.style.display='';
+
+
   var quizText = document.getElementById("quizText");
   quizText.style.display='none';
 
   var highScore = document.getElementById("highScore");
   highScore.style.display='none';
 
-
+  
   var startBtn = document.querySelector("#startBtn");
+  startBtn.addEventListener("click", manageQuizQuestion);
 
-  function startQuiz() {
-    var openingText = document.getElementById("openingText");
-    openingText.style.display='none';
-    quizText.style.display='';
-  }
+  var startOverBtn = document.querySelector("#startOverBtn");
+  startOverBtn.addEventListener("click", startOver);
 
-  // Add event listener to generate button
-  startBtn.addEventListener("click", startQuiz);
+  var question = document.getElementById("question");
 
   var option1 = document.querySelector("#option1");
-  option1.addEventListener("click", nextQuestion);
+  option1.addEventListener("click", manageQuizQuestion);
 
   var option2 = document.querySelector("#option2");
-  option2.addEventListener("click", nextQuestion);
+  option2.addEventListener("click", manageQuizQuestion);
 
   var option3 = document.querySelector("#option3");
-  option3.addEventListener("click", nextQuestion);
+  option3.addEventListener("click", manageQuizQuestion);
 
-  function nextQuestion() {
-    question.innerHTML = "Which of the following function of Array object reverses the order of the elements of an array?";
-    option1.innerHTML="reverse()";
-    option2.innerHTML="push()";
-    option3.innerHTML="reduce()";
+  var wrongAnswers=0;
+  var rightAnswers=0;
+
+  function manageQuizQuestion() {
+    
+    if (this.id == 'option1' || this.id=='option2' || this.id=='option3') {
+      if ((quizQuestions[questionNumber-1].correctAnswer=='a' && this.id=='option1') || (quizQuestions[questionNumber-1].correctAnswer=='b' && this.id=='option2') || (quizQuestions[questionNumber-1].correctAnswer=='c' && this.id=='option3')) {
+        rightAnswers++;
+      }
+      else {
+        wrongAnswers++;
+      }
+
+    }
+
+    if (questionNumber<numberOfQuestions) {
+      openingText.style.display='none';
+  
+      question.innerHTML = quizQuestions[questionNumber].question;
+      option1.innerHTML=quizQuestions[questionNumber].answers.a;
+      option2.innerHTML=quizQuestions[questionNumber].answers.b;
+      option3.innerHTML=quizQuestions[questionNumber].answers.c;
+    
+      quizText.style.display='';
+
+      questionNumber++;
+    }
+    else {
+      quizText.style.display='none';
+      highScore.style.display='';
+      questionNumber=0;
+    }
   }
+
+  
+
+
+  function startOver() {
+    openingText.style.display='';
+    quizText.style.display='none';
+    highScore.style.display='none';
+    rightAnswers=0;
+    wrongAnswers=0;
+  }
+  
 </script>
 
 
