@@ -12,24 +12,27 @@
   <body>
 
     <!-- Overall Bootstrap Grid -->
-      <div class="container">
-
-
-
-
-
+    <nav class="navbar navbar-light bg-light">
+      <p class="text-left"> <a class="navbar-brand" href="#">View Highscore</a> </p>
+      <p class="text-right">Timer:<span id="timeLeft"></span></p> 
+      
+    </nav>  
+    <div class="container">
+`
 
 
         <div id="openingText">
           <h1>Quiz</h1>
 
           <p>This is a Java Script challenge, let's test how far you are with the basics of the language.
-          You will have 3 minutes to complete the quiz. If your answer is wrong time will subtracted from your
+          You will have 2 minutes to complete the quiz. If your answer is wrong time will subtracted from your
           game. Press the start button below to begin. Good luck!</p>
 
           <button id="startBtn" type="button" class="btn btn-primary btn-lg">START</button>
+          
         </div>
-
+        <div id="timer"></div>
+  
         <div id="quizText">
         
           <div id="question">
@@ -46,15 +49,18 @@
         </div>
 
         <div id="highScore">
-          <h1>High Score</h1>
+          <h1> Highscore  </h1>
+          <p>Your highscore is: <span id= "yourScore"></span></p>
+            
           <button id="startOverBtn" type="button" class="btn btn-primary btn-lg">START OVER</button>
-
         </div>
 
       </div>
 
 
 <script>
+
+ //  Array of objects that stores questions, options and correct answers.//
   var quizQuestions= [
     {
       question:"Which of the following is an advantage of using JavaScript?",
@@ -102,26 +108,40 @@
     }      
   ];
 
+  var actualTimeLeft=120;
+  var secondsToGo;
+
+  var timeLeft=document.getElementById("timeLeft");
+  timeLeft.innerHTML=0;
+
+//These variables control which questions are shown//
   var questionNumber=0;
   var numberOfQuestions= quizQuestions.length;
 
+// This var presents the opening text//
   var openingText = document.getElementById("openingText");
   openingText.style.display='';
 
-
+// This var access the object and makes sure its not shown when the quiz starts//
   var quizText = document.getElementById("quizText");
   quizText.style.display='none';
 
+//This var hides the highscore
   var highScore = document.getElementById("highScore");
   highScore.style.display='none';
 
-  
+//and this one shows the userscore
+  var yourScore = document.getElementById("yourScore");
+
+ // this event triggers the questions when the 'start button' is clicked// 
   var startBtn = document.querySelector("#startBtn");
   startBtn.addEventListener("click", manageQuizQuestion);
 
+// this event restarts the game when the 'startover button' is clicked//
   var startOverBtn = document.querySelector("#startOverBtn");
   startOverBtn.addEventListener("click", startOver);
 
+// This method generates the question and the alternatives//
   var question = document.getElementById("question");
 
   var option1 = document.querySelector("#option1");
@@ -133,17 +153,46 @@
   var option3 = document.querySelector("#option3");
   option3.addEventListener("click", manageQuizQuestion);
 
+  
   var wrongAnswers=0;
   var rightAnswers=0;
 
+  var quizStarted=false;
+  var quizEnded=false;
+
+  //These conditionals 
   function manageQuizQuestion() {
-    
+
+    if (this.id =='startBtn') {
+      actualTimeLeft=120;
+
+      quizStarted=true;
+      quizEnded=false;
+
+      secondsToGo = actualTimeLeft;
+      var downloadTimer = setInterval(function(){
+      if(secondsToGo <= 0){
+        clearInterval(downloadTimer);
+        quizText.style.display='none';
+        highScore.style.display='';
+        alert("You lose!");
+      }
+      if (quizEnded==true) {
+        clearInterval(downloadTimer);
+      }
+
+      timeLeft.innerHTML = secondsToGo;
+      secondsToGo --;
+      }, 1000);
+    }
+
     if (this.id == 'option1' || this.id=='option2' || this.id=='option3') {
       if ((quizQuestions[questionNumber-1].correctAnswer=='a' && this.id=='option1') || (quizQuestions[questionNumber-1].correctAnswer=='b' && this.id=='option2') || (quizQuestions[questionNumber-1].correctAnswer=='c' && this.id=='option3')) {
         rightAnswers++;
       }
       else {
         wrongAnswers++;
+        secondsToGo -=50;
       }
 
     }
@@ -161,12 +210,15 @@
       questionNumber++;
     }
     else {
+      quizEnded=true;
+      quizStarted=false;
       quizText.style.display='none';
       highScore.style.display='';
       questionNumber=0;
+      yourScore.innerHTML=rightAnswers;
     }
   }
-
+  
   
 
 
@@ -177,6 +229,7 @@
     rightAnswers=0;
     wrongAnswers=0;
   }
+
   
 </script>
 
