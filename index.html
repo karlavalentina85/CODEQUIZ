@@ -13,7 +13,7 @@
 
     <!-- Overall Bootstrap Grid -->
     <nav class="navbar navbar-light bg-light">
-      <p class="text-left"> <a class="navbar-brand" href="#">View Highscore</a> </p>
+      <p class="text-left"> <a class="navbar-brand" id="viewHighScores" href="#">View Highscore</a> </p>
       <p class="text-right">Timer:<span id="timeLeft"></span></p> 
       
     </nav>  
@@ -25,7 +25,7 @@
           <h1>Quiz</h1>
 
           <p>This is a Java Script challenge, let's test how far you are with the basics of the language.
-          You will have 2 minutes to complete the quiz. If your answer is wrong time will subtracted from your
+          You will have 2 minutes to complete the quiz. If your answer is wrong time will subtracted (50 sec.) from your
           game. Press the start button below to begin. Good luck!</p>
 
           <button id="startBtn" type="button" class="btn btn-primary btn-lg">START</button>
@@ -49,10 +49,23 @@
         </div>
 
         <div id="highScore">
-          <h1> Highscore  </h1>
+          <h1> High Score</h1>
           <p>Your highscore is: <span id= "yourScore"></span></p>
-            
+          <form method="POST">
+            <div class="input-group">
+              <label for="yourInitials">Enter your initials: </label> <input type="text"  id="initials"/>
+            </div>
+            <button id="highScoreSubmit" type="button">Submit</button>
+          </form>
+         <br>   
           <button id="startOverBtn" type="button" class="btn btn-primary btn-lg">START OVER</button>
+        </div>
+
+        <div id="showHighScores">
+          <h1>Top 5 High Scores</h1>
+          <div id="myHighScores">
+
+          </div>
         </div>
 
       </div>
@@ -114,6 +127,8 @@
   var timeLeft=document.getElementById("timeLeft");
   timeLeft.innerHTML=0;
 
+  var viewHighScores=document.getElementById("viewHighScores");
+  viewHighScores.addEventListener("click", showTop5HighScores);
 //These variables control which questions are shown//
   var questionNumber=0;
   var numberOfQuestions= quizQuestions.length;
@@ -121,6 +136,8 @@
 // This var presents the opening text//
   var openingText = document.getElementById("openingText");
   openingText.style.display='';
+
+  var myHighScores = document.getElementById("myHighScores");
 
 // This var access the object and makes sure its not shown when the quiz starts//
   var quizText = document.getElementById("quizText");
@@ -130,6 +147,9 @@
   var highScore = document.getElementById("highScore");
   highScore.style.display='none';
 
+  var showHighScores = document.getElementById("showHighScores");
+  showHighScores.style.display='none';
+
 //and this one shows the userscore
   var yourScore = document.getElementById("yourScore");
 
@@ -137,6 +157,10 @@
   var startBtn = document.querySelector("#startBtn");
   startBtn.addEventListener("click", manageQuizQuestion);
 
+  var highScoreSubmit=document.querySelector("#highScoreSubmit")
+  highScoreSubmit.addEventListener("click", storeHighScore);
+  
+  
 // this event restarts the game when the 'startover button' is clicked//
   var startOverBtn = document.querySelector("#startOverBtn");
   startOverBtn.addEventListener("click", startOver);
@@ -152,7 +176,6 @@
 
   var option3 = document.querySelector("#option3");
   option3.addEventListener("click", manageQuizQuestion);
-
   
   var wrongAnswers=0;
   var rightAnswers=0;
@@ -175,6 +198,7 @@
         clearInterval(downloadTimer);
         quizText.style.display='none';
         highScore.style.display='';
+        showHighScores.style.display='none';
         alert("You lose!");
       }
       if (quizEnded==true) {
@@ -192,7 +216,7 @@
       }
       else {
         wrongAnswers++;
-        secondsToGo -=50;
+        secondsToGo -=25;
       }
 
     }
@@ -214,22 +238,52 @@
       quizStarted=false;
       quizText.style.display='none';
       highScore.style.display='';
+      showHighScores.style.display='none';
       questionNumber=0;
       yourScore.innerHTML=rightAnswers;
     }
   }
   
-  
+  function showTop5HighScores() {
+    showHighScores.style.display='';
+    var top5Scores = JSON.parse(localStorage.getItem("highscore"));
+    var text='';
 
+    for (i = 0; i < top5Scores.length; i++) {
+      text += top5Scores[i].userName  + ": " + top5Scores[i].score + "<br/>" ;
+    }
+
+    myHighScores.innerHTML = text;
+  }
+
+  function storeHighScore(){
+    var initials = document.querySelector("#initials").value;
+
+
+    if (initials =="") {
+      alert("Enter some initials before saving high score.");
+    }
+    else {
+      var result = {userName: initials, score: rightAnswers};
+
+      var savedScores = localStorage.getItem('highscore') || '[]' // get the score, or the initial value if empty
+
+      var highscores = [...JSON.parse(savedScores), result] // add the result
+        .sort((a, b) => b.score- a.score) // sort descending
+        .slice(0, 5) // take highest 5
+
+      localStorage.setItem('highscore', JSON.stringify(highscores)) // store the scores
+    }
+  }
 
   function startOver() {
     openingText.style.display='';
     quizText.style.display='none';
     highScore.style.display='none';
+    showHighScores.style.display='none';
     rightAnswers=0;
     wrongAnswers=0;
   }
-
   
 </script>
 
@@ -237,14 +291,9 @@
 
 
 
-        
-
-
-
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>  
-    </body>
-    </html>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>  
+  </body>
+</html>
 
   
