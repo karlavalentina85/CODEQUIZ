@@ -17,19 +17,17 @@
       <p class="text-right">Timer:<span id="timeLeft"></span></p> 
       
     </nav>  
-    <div class="container">
-`
-
-
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container mx-auto" style="width: 500px;">
         <div id="openingText">
           <h1>Quiz</h1>
 
           <p>This is a Java Script challenge, let's test how far you are with the basics of the language.
-          You will have 2 minutes to complete the quiz. If your answer is wrong time will subtracted (50 sec.) from your
+          You will have 2 minutes to complete the quiz. If your answer is wrong time will be subtracted (25 sec.) from your
           game. Press the start button below to begin. Good luck!</p>
 
-          <button id="startBtn" type="button" class="btn btn-primary btn-lg">START</button>
-          
+          <button id="startBtn" type="button"  class="btn btn-primary btn-lg">START</button>
+          <hr>
         </div>
         <div id="timer"></div>
   
@@ -46,11 +44,12 @@
           <button id="option2" type="button" class="btn btn-outline-secondary" value='b'>Using arguments.length property</button>
           <br>
           <button id="option3" type="button" class="btn btn-outline-success" value='c'>None of the above.</button>
+          <hr>
         </div>
 
         <div id="highScore">
           <h1> High Score</h1>
-          <p>Your highscore is: <span id= "yourScore"></span></p>
+          <h2>Your high score is: <span id= "yourScore"></span></h2>
           <form method="POST">
             <div class="input-group">
               <label for="yourInitials">Enter your initials: </label> <input type="text"  id="initials"/>
@@ -59,7 +58,10 @@
           </form>
          <br>   
           <button id="startOverBtn" type="button" class="btn btn-primary btn-lg">START OVER</button>
+          <hr>
         </div>
+
+        <div id="feedback"></div>
 
         <div id="showHighScores">
           <h1>Top 5 High Scores</h1>
@@ -67,9 +69,8 @@
 
           </div>
         </div>
-
       </div>
-
+    </div>
 
 <script>
 
@@ -120,15 +121,20 @@
       correctAnswer: "a" 
     }      
   ];
-
+//this 2 var deal with the timer (outside of the fuction because I need to access those var in other parts of the page)
   var actualTimeLeft=120;
   var secondsToGo;
+//var for showing right or wrong answer
+  var feedback=document.getElementById("feedback");
 
+//this represents the div in the html for the countdown
   var timeLeft=document.getElementById("timeLeft");
   timeLeft.innerHTML=0;
 
+//this is the viewhighscore link
   var viewHighScores=document.getElementById("viewHighScores");
   viewHighScores.addEventListener("click", showTop5HighScores);
+
 //These variables control which questions are shown//
   var questionNumber=0;
   var numberOfQuestions= quizQuestions.length;
@@ -137,16 +143,18 @@
   var openingText = document.getElementById("openingText");
   openingText.style.display='';
 
+//this represents the div in the html to show the top high 5 scores
   var myHighScores = document.getElementById("myHighScores");
 
 // This var access the object and makes sure its not shown when the quiz starts//
   var quizText = document.getElementById("quizText");
   quizText.style.display='none';
 
-//This var hides the highscore
+//This var hides the high score
   var highScore = document.getElementById("highScore");
   highScore.style.display='none';
 
+//This represents the div that shows the high score
   var showHighScores = document.getElementById("showHighScores");
   showHighScores.style.display='none';
 
@@ -157,15 +165,16 @@
   var startBtn = document.querySelector("#startBtn");
   startBtn.addEventListener("click", manageQuizQuestion);
 
+//this is the button that submits the initials for highscore
   var highScoreSubmit=document.querySelector("#highScoreSubmit")
   highScoreSubmit.addEventListener("click", storeHighScore);
   
   
-// this event restarts the game when the 'startover button' is clicked//
+// this event restarts the game when the 'startover button' is clicked
   var startOverBtn = document.querySelector("#startOverBtn");
   startOverBtn.addEventListener("click", startOver);
 
-// This method generates the question and the alternatives//
+// This stores the question text and the alternatives(buttons)
   var question = document.getElementById("question");
 
   var option1 = document.querySelector("#option1");
@@ -192,6 +201,9 @@
       quizStarted=true;
       quizEnded=false;
 
+      feedback.innerHTML='';
+      showHighScores.style.display='none';
+
       secondsToGo = actualTimeLeft;
       var downloadTimer = setInterval(function(){
       if(secondsToGo <= 0){
@@ -213,10 +225,12 @@
     if (this.id == 'option1' || this.id=='option2' || this.id=='option3') {
       if ((quizQuestions[questionNumber-1].correctAnswer=='a' && this.id=='option1') || (quizQuestions[questionNumber-1].correctAnswer=='b' && this.id=='option2') || (quizQuestions[questionNumber-1].correctAnswer=='c' && this.id=='option3')) {
         rightAnswers++;
+        feedback.innerHTML='Right Answer!';
       }
       else {
         wrongAnswers++;
         secondsToGo -=25;
+        feedback.innerHTML='Wrong Answer!';
       }
 
     }
@@ -264,6 +278,8 @@
       alert("Enter some initials before saving high score.");
     }
     else {
+      highScoreSubmit.disabled=true;
+
       var result = {userName: initials, score: rightAnswers};
 
       var savedScores = localStorage.getItem('highscore') || '[]' // get the score, or the initial value if empty
@@ -281,6 +297,8 @@
     quizText.style.display='none';
     highScore.style.display='none';
     showHighScores.style.display='none';
+    feedback.innerHTML='';
+    highScoreSubmit.disabled=false;
     rightAnswers=0;
     wrongAnswers=0;
   }
