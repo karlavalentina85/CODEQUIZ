@@ -192,7 +192,7 @@
   var quizStarted=false;
   var quizEnded=false;
 
-  //These conditionals 
+  //This is the main function that starts the quiz and moves through it
   function manageQuizQuestion() {
 
     if (this.id =='startBtn') {
@@ -204,6 +204,7 @@
       feedback.innerHTML='';
       showHighScores.style.display='none';
 
+//this is the timer
       secondsToGo = actualTimeLeft;
       var downloadTimer = setInterval(function(){
       if(secondsToGo <= 0){
@@ -222,11 +223,12 @@
       }, 1000);
     }
 
+//this checks if the answers are right or wrong and compares it to the right alternative
     if (this.id == 'option1' || this.id=='option2' || this.id=='option3') {
       if ((quizQuestions[questionNumber-1].correctAnswer=='a' && this.id=='option1') || (quizQuestions[questionNumber-1].correctAnswer=='b' && this.id=='option2') || (quizQuestions[questionNumber-1].correctAnswer=='c' && this.id=='option3')) {
         rightAnswers++;
         feedback.innerHTML='Right Answer!';
-      }
+      }      
       else {
         wrongAnswers++;
         secondsToGo -=25;
@@ -234,7 +236,7 @@
       }
 
     }
-
+//This displays the questions and the answers
     if (questionNumber<numberOfQuestions) {
       openingText.style.display='none';
   
@@ -257,7 +259,7 @@
       yourScore.innerHTML=rightAnswers;
     }
   }
-  
+// shows the top high 5 scores
   function showTop5HighScores() {
     showHighScores.style.display='';
     var top5Scores = JSON.parse(localStorage.getItem("highscore"));
